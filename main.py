@@ -23,6 +23,7 @@ logger = logging.getLogger()
 # Getting mode, so we could define run function for local and Heroku setup
 mode = os.getenv("MODE")
 TOKEN = os.getenv("TOKEN")
+BAN_WAITING_TIME = int(os.getenv("BAN_WAITING_TIME"))
 
 if mode == "dev":
     def run(updater):
@@ -123,7 +124,7 @@ def hodor(update, context):
             }
             logger.info("running callback")
             logger.info(f"message id {update.message.message_id}")
-            context.job_queue.run_once(job_callback, 120, context=job_context)
+            context.job_queue.run_once(job_callback, BAN_WAITING_TIME, context=job_context)
 
     except AttributeError:
         pass
