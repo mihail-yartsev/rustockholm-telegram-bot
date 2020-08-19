@@ -14,7 +14,6 @@ from telegram.ext import (
     CallbackQueryHandler
 )
 
-
 # Enabling logging
 logging.basicConfig(level=logging.INFO,
                     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
@@ -54,17 +53,13 @@ logger = logging.getLogger(__name__)
 # update. Error handlers also receive the raised TelegramError object in error.
 def start(update, context):
     """Send a message when the command /start is issued."""
-    update.message.reply_text("Привет. Я - акула-вахтер! Рад знакомству!.")
+    update.message.reply_text("Привет. Я - Сторож Карл! Рад знакомству!.")
 
 
 def help(update, context):
     """Send a message when the command /help is issued."""
-    update.message.reply_text("Доступные команды: \n\n/id")
-
-
-def id(update, context):
-    """Send a message when the command /help is issued."""
-    update.message.reply_text(update.effective_chat.id)
+    #update.message.reply_text("Доступные команды: \n\n/id")
+    update.message.reply_text("Прости, лично я пока ничем не готов помочь...")
 
 
 def hodor(update, context):
@@ -91,11 +86,11 @@ def hodor(update, context):
                 "Привет, " +
                 new_member.first_name + (
                 ", и добро пожаловать! В закрепленном сообщении наверху"
-                "есть много полезной информации, а также вопросы, с помощью "
+                " есть много полезной информации, а также вопросы, с помощью "
                 "которых вы можете представиться сообществу. Не забудьте это "
                 "сделать!"
-                "Но прежде всего, покажите что вы не робот,"
-                "взяв себе пиццу ниже."
+                "Но прежде всего, покажите что вы не робот, "
+                "взяв себе пиццу ниже :)"
                 ),
                 reply_markup=reply_markup
             )
@@ -192,7 +187,6 @@ if __name__ == "__main__":
 
     updater.dispatcher.add_handler(CommandHandler("start", start))
     updater.dispatcher.add_handler(CommandHandler("help", help))
-    updater.dispatcher.add_handler(CommandHandler("id", id))
     updater.dispatcher.add_handler(CallbackQueryHandler(button))
 
     updater.dispatcher.add_error_handler(error)
