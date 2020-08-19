@@ -23,7 +23,7 @@ logger = logging.getLogger()
 # Getting mode, so we could define run function for local and Heroku setup
 mode = os.getenv("MODE")
 TOKEN = os.getenv("TOKEN")
-BAN_WAITING_TIME = int(os.getenv("BAN_WAITING_TIME"))
+BAN_WAITING_TIME = int(os.getenv("BAN_WAITING_TIME", 10))
 
 if mode == "dev":
     def run(updater):
@@ -81,27 +81,9 @@ def hodor(update, context):
                     can_add_web_page_previews=False)
             )
 
-            keyboard_items = [
-                InlineKeyboardButton("🥩", callback_data=callback_id + ",steak"),
-                InlineKeyboardButton("🥝", callback_data=callback_id + ",kiwi"),
-                InlineKeyboardButton("🥛", callback_data=callback_id + ",milk"),
-                InlineKeyboardButton("🥓", callback_data=callback_id + ",bacon"),
-                InlineKeyboardButton("🥥", callback_data=callback_id + ",coconut"),
-                InlineKeyboardButton("🍩", callback_data=callback_id + ",donut"),
-                InlineKeyboardButton("🌮", callback_data=callback_id + ",taco"),
+            keyboard = [[
                 InlineKeyboardButton("🍕", callback_data=callback_id + ",pizza"),
-            ]
-
-            shuffle(keyboard_items)
-            keyboard = []
-
-            counter = 0
-            for i in range(2):  # create a list with nested lists
-                keyboard.append([])
-                for n in range(4):
-                    keyboard_item = keyboard_items[counter]
-                    keyboard[i].append(keyboard_item)
-                    counter += 1
+            ]]
 
             reply_markup = InlineKeyboardMarkup(keyboard)
 
