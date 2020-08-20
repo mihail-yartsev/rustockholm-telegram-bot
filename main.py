@@ -92,7 +92,8 @@ def guard(update, context):
                 "Но прежде всего, покажите что вы не робот, "
                 "взяв себе пиццу ниже :)"
                 ),
-                reply_markup=reply_markup
+                reply_markup=reply_markup,
+                disable_notification=True
             )
             job_context = {
                 "user_id": callback_id,
