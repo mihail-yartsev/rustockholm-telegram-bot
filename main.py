@@ -62,7 +62,7 @@ def help(update, context):
     update.message.reply_text("Прости, лично я пока ничем не готов помочь...")
 
 
-def hodor(update, context):
+def guard(update, context):
     try:
         for new_member in update.message.new_chat_members:
             callback_id = str(new_member.id)
@@ -97,11 +97,16 @@ def hodor(update, context):
             job_context = {
                 "user_id": callback_id,
                 "chat_id": update.effective_chat.id,
-                "message_id": reply_message.message_id
+                "message_id": reply_message.message_id,
+                "welcome_message_id": update.message.message_id,
             }
-            logger.info("running callback")
+            logger.info(f"running callback for {job_context}")
             logger.info(f"message id {update.message.message_id}")
-            context.job_queue.run_once(job_callback, BAN_WAITING_TIME, context=job_context)
+            context.job_queue.run_once(
+                job_callback,
+                BAN_WAITING_TIME,
+                context=job_context
+            )
 
     except AttributeError:
         pass
@@ -121,7 +126,7 @@ def kick_user(bot, user_id, chat_id):
     unban_user(bot, user_id, chat_id)
 
 
-def button(update, context):
+def guard_button(update, context):
     query = update.callback_query
     person_who_pushed_the_button = int(query.data.split(",")[0])
     print("Query user: " + str(query.from_user))
@@ -163,6 +168,7 @@ def job_callback(context):
     # in case if message is deleted, kicking user
     logger.info("processing callback")
     message_id: int = context.job.context.get("message_id")
+    welcome_message_id: int = context.job.context.get("welcome_message_id")
     chat_id: int = context.job.context.get("chat_id")
     user_id: int = context.job.context.get("user_id")
 
@@ -177,8 +183,9 @@ def job_callback(context):
         kick_user(context.bot, user_id, chat_id)
         # print some message
         # log that bot kicked some user
+        context.bot.delete_message(chat_id, welcome_message_id)
     finally:
-        pass
+        logger.info("job's done")
 
 
 if __name__ == "__main__":
@@ -187,13 +194,13 @@ if __name__ == "__main__":
 
     updater.dispatcher.add_handler(CommandHandler("start", start))
     updater.dispatcher.add_handler(CommandHandler("help", help))
-    updater.dispatcher.add_handler(CallbackQueryHandler(button))
+    updater.dispatcher.add_handler(CallbackQueryHandler(guard_button))
 
     updater.dispatcher.add_error_handler(error)
 
     updater.dispatcher.add_handler(
         MessageHandler(
-            Filters.chat(int(os.environ["CHAT_ID"])), hodor
+            Filters.chat(int(os.environ["CHAT_ID"])), guard
         )
     )
     run(updater)
