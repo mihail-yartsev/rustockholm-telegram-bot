@@ -150,6 +150,8 @@ def guard_button(update, context):
                 can_send_media_messages=True,
                 can_send_other_messages=False,
                 can_pin_messages=False,
+                can_send_pools=True,
+                can_invite_users=True,
                 can_change_info=False,
                 can_add_web_page_previews=True)
             )
