@@ -100,6 +100,7 @@ def guard(update, context):
                 "chat_id": update.effective_chat.id,
                 "message_id": reply_message.message_id,
                 "welcome_message_id": update.message.message_id,
+                "new_member": f"{new_member.first_name} {new_member.last_name}",
             }
             logger.info(f"running callback for {job_context}")
             logger.info(f"message id {update.message.message_id}")
@@ -176,8 +177,10 @@ def job_callback(context):
     welcome_message_id: int = context.job.context.get("welcome_message_id")
     chat_id: int = context.job.context.get("chat_id")
     user_id: int = context.job.context.get("user_id")
+    new_member: str = context.job.context.get("new_member")
 
     try:
+        logger.info(f"processing user {new_member}")
         context.bot.delete_message(chat_id, message_id)
     except telegram.error.BadRequest as e:
         # in case if message is deleted, means user made some action
